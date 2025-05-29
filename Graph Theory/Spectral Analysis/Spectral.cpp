@@ -24,7 +24,7 @@ public:
         return result;
     }
 
-    static SpectralGraph fromEdges(const std::vector<std::tuple<int, int, double>>& edges, int n) {
+    static SpectralGraph from_edges(const std::vector<std::tuple<int, int, double>>& edges, int n) {
         Matrix adj(n, std::vector<double>(n, 0.0));
         for (const auto& [u, v, w] : edges) {
             adj[u][v] = w;
@@ -41,7 +41,7 @@ private:
     Matrix laplacian;
     size_t size;
 
-    static Matrix computeLaplacian(const Matrix& adj) {
+    static Matrix compute_laplacian(const Matrix& adj) {
         size_t n = adj.size();
         Matrix lap(n, std::vector<double>(n, 0.0));
 
@@ -55,7 +55,7 @@ private:
         return lap;
     }
 
-    static Eigen::MatrixXd toEigenMatrix(const Matrix& mat) {
+    static Eigen::MatrixXd to_eigen_matrix(const Matrix& mat) {
         size_t n = mat.size();
         Eigen::MatrixXd emat(n, n);
         for (size_t i = 0; i < n; ++i)
