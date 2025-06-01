@@ -1,11 +1,14 @@
 #pragma once
 
-#include <iostream>
 #include <array>
+#include <cmath>
+#include <iostream>
+#include <limits>
+#include <type_traits>
 
 #include "Core.h"
 
-namespace{
+namespace Primitive {
 
 #define R2 2
 #define R3 3
@@ -14,136 +17,167 @@ namespace{
 #define Y 1
 #define Z 2
 
-    template<class coordinate_type, size_t dimension = R3>
-    class Vector{
-            std::static_assert(std::is_arithmetic<coordinate_type>, "Vector Class only supports integer or real numbers");
-            std::static_assert(dimension >= 2, "Vector must be either in R2 or R3");
+template <class coordinate_type, size_t dimension = R3>
+class Vector {
+    static_assert(std::is_arithmetic_v<coordinate_type>, "Vector class only supports arithmetic types (integers or floating-point numbers)");
+    static_assert(dimension >= 2 && dimension <= 3, "Vector dimension must be 2 or 3");
 
-            std::array<coordinate_type, dimension> coordinates;
+    std::array<coordinate_type, dimension> coordinates;
 
-            friend float dot_product(const Vector<coordinate_type, dimension> &v1, const Vector<coordinate_type, dimension> &v2);
-        public:
-            Vector(){}
-            Vector(std::array<coordinate_type, dimension> _coords) : coordinates(_coords){}
-            Vector(coordinate_type _x, coordinate_type _y) : coordinates({x,y}) {}
-            Vector(coordinate_type _x, coordinate_type _y, coordinate_type _z) : coordinates({x,y,z}) {}
+    friend float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2);
 
-            bool operator== (const Vector<coordinate_type, dimension> &_other);
-            bool operator!= (const Vector<coordinate_type, dimension> &_other);
-            
-            // Arithmetic
-            Vector<coordinate_type, dimension> operator+ (const Vector<coordinate_type, dimension> &_other) const;
-            Vector<coordinate_type, dimension> operator- (const Vector<coordinate_type, dimension> &_other) const;
+public:
+    Vector() : coordinates{} {}
+    Vector(std::array<coordinate_type, dimension> coords) : coordinates(coords) {}
+    Vector(coordinate_type x, coordinate_type y) requires(dimension == R2) : coordinates{x, y} {}
+    Vector(coordinate_type x, coordinate_type y, coordinate_type z) requires(dimension == R3) : coordinates{x, y, z} {}
 
-            // Boolean
-            bool operator <(const Vector<coordinate_type, dimension> &_other);
-            bool operator >(const Vector<coordinate_type, dimension> &_other);
+    // Comparison operators
+    bool operator==(const Vector<coordinate_type, dimension>& other) const;
+    bool operator!=(const Vector<coordinate_type, dimension>& other) const;
 
-            // Indexing
-            coordinate_type operator[] (int);
+    // Arithmetic operators
+    Vector<coordinate_type, dimension> operator+(const Vector<coordinate_type, dimension>& other) const;
+    Vector<coordinate_type, dimension> operator-(const Vector<coordinate_type, dimension>& other) const;
 
-            // Functions
-            void assign(int dim, coordinate_type value);
-            float magnited();   
-            void normalize();         
-    };
+    // Boolean operators
+    bool operator<(const Vector<coordinate_type, dimension>& other) const;
+    bool operator>(const Vector<coordinate_type, dimension>& other) const;
 
-    typedef Vector<float, DIM2> Vector2f;
-    typedef Vector<float, DIM3> Vector3f;
+    // Indexing
+    coordinate_type operator[](size_t index) const;
+    coordinate_type& operator[](size_t index);
 
-    template<class coordinate_type, size_t dimension>
-    inline bool Vector<coordinate_type, dimension>::operator==(const Vector<coordinate_type, dimension> &_other){
-        for(size_t i = 0; i < dimension; i++){
-            if(!is_equal_1D(coordinates[i], _other.coordinates))  return false;
-        }
-        return true;
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline bool Vector<coordinate_type, dimension>::operator!=(const Vector<coordinate_type, dimension> &_other){
-        return !(*this == _other);
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline Vector<coordinate_type, dimension>::operator+ (const Vector<coordinate_type, dimension> &_other){
-        std::array<coordinate_type> temp_array;
-        for(size_t i = 0; i < dimension; ++i){
-            temp_array[i] = coordinates[i] + _other[i]; 
-        }
-        return Vector<coordinate_type, dimension> (temp_array);
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline Vector<coordinate_type, dimension>::operator- (const Vector<coordinate_type, dimension> &_other){
-        std::array<coordinate_type> temp_array;
-        for(size_t i = 0; i < dimension; ++i){
-            temp_array[i] = coordinates[i] - _other[i]; 
-        }
-        return Vector<coordinate_type, dimension> (temp_array);
-    }
-    
-    template<class coordinate_type, size_t dimension>
-    inline bool Vector<coordinate_type, dimension>::operator < (const Vector<coordinate_type, dimension> &_other){
-        for(size_t i = 0; i < dimension; ++i){
-            if(this -> coords[i] < _other.coords[i]) return true;
-            else if(this -> coords[i] > _other.coords[i]) return false;
-        }
-        return false;
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline bool Vector<coordinate_type, dimension>::operator > (const Vector<coordinate_type, dimension> &_other){
-        if(*this == _other) return false;
-        return !(*this < _other);
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline coordinate_type Vector<coordinate_type, dimension>::operator[] (int _index) const{
-        if(_index >= coordinates.size()){
-            std::cout << "Index out of bounds" << std::endl;
-            return coordinate_type();
-        }
-        return coordinates[_index];
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline void Vector<coordinate_type, dimension>::assign(int dim, coordinate_type value){
-        if(_index >= coordinates.size()){
-            std::cout << "Index out of bounds" << std::endl;
-        }
-        coordinates[dim] = value;
-    }
-
-    template<class coordinate_type, size_t dimension>
-    float Vector<coordinate_type, dimension>::dot_product(const Vector<coordinate_type, dimension> &v1, const Vector<coordinate_type, dimension> &v2){
-        if(v1.coordinates.size() != v2.coordinates.size()) return FLT_MIN;
-
-        float product = 0.0f;
-
-        for(size_t i = 0; i < dimension; ++i){
-            product += v1[i] * v2[i];
-        }
-        return product;
-    }
-
-    float cross_product_R2 (Vector2f v1, Vector2f v2);
-
-    Vector3f cross_product_R3 (Vector3f v1, Vector3f v2);
-    
-    template<class coordinate_type, size_t dimension>
-    inline float Vector<coordinate_type, dimension>::magnitude() const{
-        float value = 0.0f;
-        for(size_t i = 0; i < dimension; ++i){
-            value += std::pow(coordinates[i], 2.0);
-        }
-        return sqrt(value);
-    }
-
-    template<class coordinate_type, size_t dimension>
-    inline void Vector<coordinate_type, dimension>::normalize() const{
-        auto mag = magnitude();
-        for(size_t i = 0; i < dimension; ++i){
-            assign(i, coordinates[i]/mag);
-        }
-    }
+    // Functions
+    void assign(size_t dim, coordinate_type value);
+    float magnitude() const;
+    void normalize();
 };
+
+using Vector2f = Vector<float, R2>;
+using Vector3f = Vector<float, R3>;
+
+inline bool is_equal_1D(double a, double b, double epsilon = 1e-5) {
+    return std::fabs(a - b) <= epsilon;
+}
+
+// Implementation of comparison operators
+template <class coordinate_type, size_t dimension>
+inline bool Vector<coordinate_type, dimension>::operator==(const Vector<coordinate_type, dimension>& other) const {
+    for (size_t i = 0; i < dimension; ++i) {
+        if constexpr (std::is_floating_point_v<coordinate_type>) {
+            if (!is_equal_1D(static_cast<double>(coordinates[i]), static_cast<double>(other.coordinates[i]))) {
+                return false;
+            }
+        } else {
+            if (coordinates[i] != other.coordinates[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+template <class coordinate_type, size_t dimension>
+inline bool Vector<coordinate_type, dimension>::operator!=(const Vector<coordinate_type, dimension>& other) const {
+    return !(*this == other);
+}
+
+// Implementation of arithmetic operators
+template <class coordinate_type, size_t dimension>
+inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::operator+(const Vector<coordinate_type, dimension>& other) const {
+    std::array<coordinate_type, dimension> result;
+    for (size_t i = 0; i < dimension; ++i) {
+        result[i] = coordinates[i] + other.coordinates[i];
+    }
+    return Vector<coordinate_type, dimension>(result);
+}
+
+template <class coordinate_type, size_t dimension>
+inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::operator-(const Vector<coordinate_type, dimension>& other) const {
+    std::array<coordinate_type, dimension> result;
+    for (size_t i = 0; i < dimension; ++i) {
+        result[i] = coordinates[i] - other.coordinates[i];
+    }
+    return Vector<coordinate_type, dimension>(result);
+}
+
+// Implementation of boolean operators
+template <class coordinate_type, size_t dimension>
+inline bool Vector<coordinate_type, dimension>::operator<(const Vector<coordinate_type, dimension>& other) const {
+    for (size_t i = 0; i < dimension; ++i) {
+        if (coordinates[i] < other.coordinates[i]) return true;
+        if (coordinates[i] > other.coordinates[i]) return false;
+    }
+    return false;
+}
+
+template <class coordinate_type, size_t dimension>
+inline bool Vector<coordinate_type, dimension>::operator>(const Vector<coordinate_type, dimension>& other) const {
+    if (*this == other) return false;
+    return !(*this < other);
+}
+
+// Implementation of indexing operators
+template <class coordinate_type, size_t dimension>
+inline coordinate_type Vector<coordinate_type, dimension>::operator[](size_t index) const {
+    if (index >= dimension) {
+        std::cerr << "Vector index out of bounds" << std::endl;
+        return coordinate_type{};
+    }
+    return coordinates[index];
+}
+
+template <class coordinate_type, size_t dimension>
+inline coordinate_type& Vector<coordinate_type, dimension>::operator[](size_t index) {
+    if (index >= dimension) {
+        std::cerr << "Vector index out of bounds" << std::endl;
+        throw std::out_of_range("Vector index out of bounds");
+    }
+    return coordinates[index];
+}
+
+// Implementation of member functions
+template <class coordinate_type, size_t dimension>
+inline void Vector<coordinate_type, dimension>::assign(size_t dim, coordinate_type value) {
+    if (dim >= dimension) {
+        std::cerr << "Vector dimension out of bounds" << std::endl;
+        return;
+    }
+    coordinates[dim] = value;
+}
+
+template <class coordinate_type, size_t dimension>
+inline float Vector<coordinate_type, dimension>::magnitude() const {
+    float value = 0.0f;
+    for (size_t i = 0; i < dimension; ++i) {
+        value += static_cast<float>(coordinates[i] * coordinates[i]);
+    }
+    return std::sqrt(value);
+}
+
+template <class coordinate_type, size_t dimension>
+inline void Vector<coordinate_type, dimension>::normalize() {
+    float mag = magnitude();
+    if (mag > TOLERANCE) {
+        for (size_t i = 0; i < dimension; ++i) {
+            coordinates[i] = static_cast<coordinate_type>(coordinates[i] / mag);
+        }
+    }
+}
+
+// Dot product implementation
+template <class coordinate_type, size_t dimension>
+inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
+    float product = 0.0f;
+    for (size_t i = 0; i < dimension; ++i) {
+        product += static_cast<float>(v1.coordinates[i] * v2.coordinates[i]);
+    }
+    return product;
+}
+
+// Cross product declarations
+float cross_product_R2(const Vector2f& v1, const Vector2f& v2);
+Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2);
+
+} // namespace Primitive
