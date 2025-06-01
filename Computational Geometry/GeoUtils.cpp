@@ -1,6 +1,6 @@
 #include "GeoUtils.h"
 
-double jmk::area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &c){
+double GeomCore::area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &c){
     auto AB = b - a;
     auto AC = c - a;
 
@@ -8,7 +8,7 @@ double jmk::area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &
     return result / 2;
 }
 
-int jmk::orientation_2d(const Point2d &a, const Point2d &b, const Point2d &c){
+int GeomCore::orientation_2d(const Point2d &a, const Point2d &b, const Point2d &c){
     auto area = area_triangle_2d(a, b, c);
     
     if(area > 0 && area < TOLERANCE)

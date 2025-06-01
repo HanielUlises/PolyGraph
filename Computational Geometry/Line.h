@@ -1,7 +1,7 @@
 #include "Vector.h"
 
-namespace jmk{
-    template <class coord_type, size_t dim = DIM3>
+namespace GeomCore{
+    template <class coord_type, size_t dim = R3>
     class Line{
         Vector<coord_type, dim> point;
         Vector<coord_type, dim> dir;

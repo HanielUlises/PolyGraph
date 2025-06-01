@@ -8,7 +8,7 @@
 
 #include "Core.h"
 
-namespace Primitive {
+namespace GeomCore {
 
 #define R2 2
 #define R3 3
@@ -176,8 +176,10 @@ inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vec
     return product;
 }
 
-// Cross product declarations
+// Cross product 
 float cross_product_R2(const Vector2f& v1, const Vector2f& v2);
 Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2);
 
-} // namespace Primitive
+double area_triangle_2d();
+
+} // namespace GeomCore
