@@ -5,7 +5,7 @@
 
 // Print matrix with fixed precision
 void print_matrix(const SpectralGraph::matrix& matrix, const std::string& label) {
-    std::cout << label << ":\n";
+    std::cout << label << ":\n";git
     for (const auto& row : matrix) {
         for (double value : row) {
             std::cout << std::fixed << std::setprecision(2) << std::setw(8) << value << " ";
