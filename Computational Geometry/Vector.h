@@ -29,8 +29,17 @@ class Vector {
 public:
     Vector() : coordinates{} {}
     Vector(std::array<coordinate_type, dimension> coords) : coordinates(coords) {}
-    Vector(coordinate_type x, coordinate_type y) requires(dimension == R2) : coordinates{x, y} {}
-    Vector(coordinate_type x, coordinate_type y, coordinate_type z) requires(dimension == R3) : coordinates{x, y, z} {}
+    
+    
+    Vector(coordinate_type x, coordinate_type y) {
+        static_assert(dimension == 2, "This constructor is only for 2D vectors.");
+        coordinates = {x, y};
+    }
+
+    Vector(coordinate_type x, coordinate_type y, coordinate_type z) {
+        static_assert(dimension == 3, "This constructor is only for 3D vectors.");
+        coordinates = {x, y, z};
+    }
 
     // Comparison operators
     bool operator==(const Vector<coordinate_type, dimension>& other) const;
@@ -102,7 +111,6 @@ inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::op
     return Vector<coordinate_type, dimension>(result);
 }
 
-// Implementation of boolean operators
 template <class coordinate_type, size_t dimension>
 inline bool Vector<coordinate_type, dimension>::operator<(const Vector<coordinate_type, dimension>& other) const {
     for (size_t i = 0; i < dimension; ++i) {
@@ -137,7 +145,6 @@ inline coordinate_type& Vector<coordinate_type, dimension>::operator[](size_t in
     return coordinates[index];
 }
 
-// Implementation of member functions
 template <class coordinate_type, size_t dimension>
 inline void Vector<coordinate_type, dimension>::assign(size_t dim, coordinate_type value) {
     if (dim >= dimension) {
@@ -166,7 +173,6 @@ inline void Vector<coordinate_type, dimension>::normalize() {
     }
 }
 
-// Dot product implementation
 template <class coordinate_type, size_t dimension>
 inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
     float product = 0.0f;
@@ -174,6 +180,13 @@ inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vec
         product += static_cast<float>(v1.coordinates[i] * v2.coordinates[i]);
     }
     return product;
+}
+
+inline Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2) {
+    float _x = v1[Y] * v2[Z] - v1[Z] * v2[Y];
+    float _y = v1[Z] * v2[X] - v1[X] * v2[Z];
+    float _z = v1[X] * v2[Y] - v1[Y] * v2[X];
+    return Vector3f(_x, _y, _z);
 }
 
 // Cross product 
