@@ -10,6 +10,14 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
+struct edge {
+    int from;
+    int to;
+    double weight;
+
+    edge(int f, int t, double w) : from(f), to(t), weight(w) {}
+};
+
 class SpectralGraph {
 public:
     using matrix = std::vector<std::vector<double>>;

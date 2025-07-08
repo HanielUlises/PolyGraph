@@ -3,9 +3,8 @@
 #include <iomanip>
 #include "spectral_graph.hpp"
 
-// Print matrix with fixed precision
 void print_matrix(const SpectralGraph::matrix& matrix, const std::string& label) {
-    std::cout << label << ":\n";git
+    std::cout << label << ":\n";
     for (const auto& row : matrix) {
         for (double value : row) {
             std::cout << std::fixed << std::setprecision(2) << std::setw(8) << value << " ";
@@ -26,6 +25,7 @@ void print_vector(const std::vector<double>& vector, const std::string& label) {
 
 int main() {
     try {
+        // Undirected graph with SpectralGraph::edge
         std::vector<SpectralGraph::edge> edges = {
             {0, 1, 1.0}, {1, 2, 2.0}, {2, 0, 1.5}, {2, 3, 1.0}
         };
@@ -37,11 +37,9 @@ int main() {
         print_matrix(graph.get_degree_matrix(), "Degree Matrix");
         print_matrix(graph.normalized_laplacian(), "Normalized Laplacian");
 
-        // Eigenvalues of Laplacian
         auto eigenvalues = graph.eigenvalues();
         print_vector(eigenvalues, "Laplacian Eigenvalues");
 
-        // Eigenvectors of Laplacian
         auto eigenvectors = graph.eigenvectors();
         for (size_t i = 0; i < eigenvectors.size(); ++i) {
             std::cout << "Eigenvector " << i + 1 << ": ";
@@ -52,10 +50,9 @@ int main() {
         }
         std::cout << "\n";
 
-        // Graph properties
         std::cout << "Vertex count: " << graph.vertex_count() << "\n";
         std::cout << "Edge count: " << graph.edge_count() << "\n";
-        std::cout << "Algebraic connectivity: " << std::fixed << std::setprecision(4) 
+        std::cout << "Algebraic connectivity: " << std::fixed << std::setprecision(4)
                   << graph.algebraic_connectivity() << "\n";
         std::cout << "Connected components: " << graph.number_of_components() << "\n";
         std::cout << "Is connected: " << (graph.is_connected() ? "Yes" : "No") << "\n\n";
@@ -75,7 +72,8 @@ int main() {
             std::cout << "Error: " << e.what() << "\n\n";
         }
 
-        std::vector<SpectralGraph::edge> large_edges;
+        // Sparse graph using global edge type
+        std::vector<edge> large_edges;
         int large_vertex_count = 100;
         for (int i = 0; i < large_vertex_count - 1; ++i) {
             large_edges.emplace_back(i, i + 1, 1.0);
