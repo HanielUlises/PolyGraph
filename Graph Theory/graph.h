@@ -1,5 +1,4 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#pragma once
 
 #include <unordered_map>
 #include <unordered_set>
@@ -154,5 +153,3 @@ template<typename node_type>
 const std::unordered_set<node_type>& graph<node_type, void>::get_adjacent(const node_type& node) const {
     return adj_list.at(node);
 }
-
-#endif // GRAPH_H
