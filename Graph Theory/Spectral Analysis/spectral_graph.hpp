@@ -1,5 +1,4 @@
-#ifndef SPECTRAL_GRAPH_HPP
-#define SPECTRAL_GRAPH_HPP
+#pragma once 
 
 #include <vector>
 #include <tuple>
@@ -281,5 +280,3 @@ private:
     size_t size_;
     bool is_directed_;
 };
-
-#endif
