@@ -13,17 +13,20 @@ namespace GeomCore{
                 point = p1;
             }
 
-            Vector<coord_type, dim> get_point();
-            Vector<coord_type, dim> get_direction();
+            Vector<coord_type, dim> get_point() const ;
+            Vector<coord_type, dim> get_direction() const;
     };
+
+    typedef Line<float, R2> Line2d;
+    typedef Line<float, R3> Line3d;
     
     template <class coord_type, size_t dim>
-    inline Vector<coord_type, dim> Line<coord_type, dim>::get_point(){
+    inline Vector<coord_type, dim> Line<coord_type, dim>::get_point() const{
         return point;
     }
 
     template <class coord_type, size_t dim>
-    inline Vector<coord_type, dim> Line<coord_type, dim>::get_direction(){
+    inline Vector<coord_type, dim> Line<coord_type, dim>::get_direction() const{
         return point;
     }
 }
