@@ -10,6 +10,7 @@ namespace GeomCore{
             Line(){}
             Line(Vector<coord_type, dim> &p1, Vector<coord_type, dim> &p2){
                 dir = p2 - p1;
+                dir.normalize();
                 point = p1;
             }
 
