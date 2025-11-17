@@ -23,17 +23,19 @@ static float get_angle(const GeomCore::Vector<T, dim>& v1,
     return static_cast<float>(radians_to_degrees(theta_rad));
 }
 
-float GeomCore::angle_lines_2D(const Line2d& l1, const Line2d& l2)
-{
+float GeomCore::angle_lines_2D(const Line2d& l1, const Line2d& l2){
     return get_angle(l1.get_direction(), l2.get_direction());
 }
 
-float GeomCore::angle_lines_3D(const Line3d& l1, const Line3d& l2)
-{
+float GeomCore::angle_lines_3D(const Line3d& l1, const Line3d& l2){
     return get_angle(l1.get_direction(), l2.get_direction());
 }
 
-float GeomCore::angle_planes(const Plane_f& p1, const Plane_f& p2)
-{
+float GeomCore::angle_line_plane(const Line3d& l1, const Plane_f& p){
+    auto angle = get_angle(l1.get_direction(), p.get_normal());
+    return 90.0f - angle;
+}
+
+float GeomCore::angle_planes(const Plane_f& p1, const Plane_f& p2){
     return get_angle(p1.get_normal(), p2.get_normal());
 }
