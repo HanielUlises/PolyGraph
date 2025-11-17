@@ -193,6 +193,6 @@ inline Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2) {
 float cross_product_R2(const Vector2f& v1, const Vector2f& v2);
 Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2);
 
-double area_triangle_2d();
+float scaler_triple_product(const Vector3f& v1, const Vector3f& v2, const Vector3f& v3);
 
 } // namespace GeomCore

@@ -12,7 +12,12 @@ namespace GeomCore {
     const int DESTINATION = 4; // Point c coincides with point b
     const int BETWEEN = 5;     // Point c lies on line segment ab between a and b
 
-    // Function declarations
     double area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &c);
     int orientation_2d(const Point2d &a, const Point2d &b, const Point2d &c);
+
+    bool collinear(const Vector3f& a, const Vector3f& b);
+    bool collinear(const Point3d& a, const Point3d& b, const Point3d& c);
+
+    bool coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c);
+    bool coplaner(const Point3d& a, const Point3d& b, const Point3d& c, const Point3d& d);
 }
