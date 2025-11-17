@@ -23,5 +23,11 @@ namespace GeomCore{
                 normal.normalize();
                 d = dot_product(normal, _p1);
             }
+
+            Vector3f get_normal() const {
+                return normal
+            }
     };
+
+    typedef Plane<float> Plane_f;
 }
