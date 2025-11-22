@@ -68,7 +68,7 @@ bool GeomCore::intersection(const Point2d& a, const Point2d& b,
  */
 bool GeomCore::intersection(const Point2d& a, const Point2d& b,
                             const Point2d& c, const Point2d& d,
-                            Point2d& intersection)
+                            Point2d& _intersection)
 {
     Vector2f AB = b - a;          // Direction vector of first line
     Vector2f CD = d - c;          // Direction vector of second line
@@ -98,8 +98,8 @@ bool GeomCore::intersection(const Point2d& a, const Point2d& b,
     auto x = a[X] + t * AB[X];
     auto y = a[Y] + t * AB[Y];
 
-    intersection.assign(X, x);
-    intersection.assign(Y, y);
+    _intersection.assign(X, x);
+    _intersection.assign(Y, y);
 
     return true;   // Unique intersection point found
 }
@@ -124,4 +124,52 @@ bool GeomCore::intersection(const Line2d& l1, const Line2d& l2,
     auto l2_end   = l2_start + l2.get_direction();
 
     return intersection(l1_start, l1_end, l2_start, l2_end, _intersection);
+}
+
+bool GeomCore::intersection(const Line3d& line, const Plane_f& plane, Point3d& point) {
+    auto n = plane.get_normal();
+    auto D = plane.get_d();
+    auto d = line.get_direction();
+    auto p = line.get_point();   
+
+    auto nd = dot_product(n, d);
+
+    if(!is_equal_1D(nd, 0)){
+        auto t = (-1 * dot_product(n, p) + D) / nd;
+        point.assign(X, p[X] + t * d[X]);
+        point.assign(Y, p[Y] + t * d[Y]);
+        point.assign(Z, p[Z] + t * d[Z]);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool GeomCore::intersection(const Plane_f& p1, const Plane_f& p2, Line3d& l){
+    Vector3f n1 = p1.get_normal();
+    Vector3f n2 = p2.get_normal();
+    
+    float d1 = p1.get_d();
+    float d2 = p2.get_d();
+
+    auto direction = cross_product_R3(n1, n2);
+
+    if(is_equal_1D(direction.magnitude(), 0)){
+        return false;
+    }
+
+    auto n1n2 = dot_product(n1, n2);
+    auto n1n2_2 = n1n2 * n1n2;
+
+    auto a = (d2 * n1n2 - d1)/(n1n2_2 - 1);
+    auto b = (d1 * n1n2 - d2)/(n1n2_2 - 1);
+
+    auto point = n1 * a + n2 * b;
+
+    l.set_point(point);
+    direction.normalize();
+    l.set_direction(direction);
+
+    return true;
 }
