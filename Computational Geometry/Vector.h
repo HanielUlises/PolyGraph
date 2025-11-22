@@ -48,6 +48,8 @@ public:
     // Arithmetic operators
     Vector<coordinate_type, dimension> operator+(const Vector<coordinate_type, dimension>& other) const;
     Vector<coordinate_type, dimension> operator-(const Vector<coordinate_type, dimension>& other) const;
+    Vector<coordinate_type, dimension> operator*(const Vector<coordinate_type, dimension>& other) const;
+    Vector<coordinate_type, dimension> operator*(coordinate_type scalar) const;
 
     // Boolean operators
     bool operator<(const Vector<coordinate_type, dimension>& other) const;
@@ -109,6 +111,26 @@ inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::op
         result[i] = coordinates[i] - other.coordinates[i];
     }
     return Vector<coordinate_type, dimension>(result);
+}
+
+
+template <class coordinate_type, size_t dimension>
+inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::operator*(const Vector<coordinate_type, dimension>& other) const {
+    Vector result;
+    for(size_t i = 0; i < dimension; i++){
+        result.coordinates[i] = coordinates[i] * other[i];
+    }
+    return result;
+    
+}
+
+template <class coordinate_type, size_t dimension>
+inline Vector<coordinate_type, dimension> Vector<coordinate_type, dimension>::operator*(coordinate_type scalar) const
+{
+    Vector<coordinate_type, dimension> result = *this;
+    for (size_t i = 0; i < dimension; ++i)
+        result.coordinates[i] *= scalar;
+    return result;
 }
 
 template <class coordinate_type, size_t dimension>
