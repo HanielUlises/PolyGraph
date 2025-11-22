@@ -27,6 +27,10 @@ namespace GeomCore{
             Vector3f get_normal() const {
                 return normal
             }
+
+            float get_d() const{
+                return d;
+            }
     };
 
     typedef Plane<float> Plane_f;
