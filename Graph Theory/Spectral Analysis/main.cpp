@@ -3,7 +3,7 @@
 #include <iomanip>
 #include "spectral_graph.hpp"
 
-void print_matrix(const SpectralGraph::matrix& matrix, const std::string& label) {
+void print_matrix(const Spectral_Graph::matrix& matrix, const std::string& label) {
     std::cout << label << ":\n";
     for (const auto& row : matrix) {
         for (double value : row) {
@@ -26,11 +26,11 @@ void print_vector(const std::vector<double>& vector, const std::string& label) {
 int main() {
     try {
         // Undirected graph with SpectralGraph::edge
-        std::vector<SpectralGraph::edge> edges = {
+        std::vector<Spectral_Graph::edge> edges = {
             {0, 1, 1.0}, {1, 2, 2.0}, {2, 0, 1.5}, {2, 3, 1.0}
         };
         int vertex_count = 4;
-        SpectralGraph graph = SpectralGraph::from_edges(edges, vertex_count);
+        Spectral_Graph graph = Spectral_Graph::from_edges(edges, vertex_count);
 
         print_matrix(graph.get_adjacency(), "Adjacency Matrix");
         print_matrix(graph.get_laplacian(), "Laplacian Matrix");
@@ -58,16 +58,16 @@ int main() {
         std::cout << "Is connected: " << (graph.is_connected() ? "Yes" : "No") << "\n\n";
 
         // Directed graph
-        std::vector<SpectralGraph::edge> directed_edges = {
+        std::vector<Spectral_Graph::edge> directed_edges = {
             {0, 1, 1.0}, {1, 2, 1.0}, {2, 0, 1.0}
         };
-        SpectralGraph directed_graph = SpectralGraph::from_edges(directed_edges, 3, true);
+        Spectral_Graph directed_graph = Spectral_Graph::from_edges(directed_edges, 3, true);
         print_matrix(directed_graph.get_adjacency(), "Directed Graph Adjacency Matrix");
         print_vector(directed_graph.eigenvalues(), "Directed Graph Laplacian Eigenvalues");
 
         try {
-            std::vector<SpectralGraph::edge> invalid_edges = {{0, 1, -1.0}};
-            SpectralGraph invalid_graph = SpectralGraph::from_edges(invalid_edges, 2);
+            std::vector<Spectral_Graph::edge> invalid_edges = {{0, 1, -1.0}};
+            Spectral_Graph invalid_graph = Spectral_Graph::from_edges(invalid_edges, 2);
         } catch (const std::invalid_argument& e) {
             std::cout << "Error: " << e.what() << "\n\n";
         }
@@ -78,7 +78,7 @@ int main() {
         for (int i = 0; i < large_vertex_count - 1; ++i) {
             large_edges.emplace_back(i, i + 1, 1.0);
         }
-        SparseSpectralGraph sparse_graph(large_edges, large_vertex_count);
+        Sparse_Spectral_Graph sparse_graph(large_edges, large_vertex_count);
         auto sparse_eigenvalues = sparse_graph.eigenvalues();
         std::cout << "Sparse Graph Eigenvalues (first 5): ";
         for (size_t i = 0; i < std::min<size_t>(5, sparse_eigenvalues.size()); ++i) {

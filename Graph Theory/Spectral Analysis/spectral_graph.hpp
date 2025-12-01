@@ -17,14 +17,14 @@ struct edge {
     edge(int f, int t, double w) : from(f), to(t), weight(w) {}
 };
 
-class SpectralGraph {
+class Spectral_Graph {
 public:
     using matrix = std::vector<std::vector<double>>;
     using edge = std::tuple<int, int, double>;
     using vector = std::vector<double>;
 
     // Construct graph from adjacency matrix
-    SpectralGraph(matrix adj, bool is_directed = false)
+    Spectral_Graph(matrix adj, bool is_directed = false)
         : adjacency_(std::move(adj)), 
           size_(adjacency_.size()), 
           is_directed_(is_directed),
@@ -34,7 +34,7 @@ public:
     }
 
     // Construct graph from edge list
-    static SpectralGraph from_edges(const std::vector<edge>& edges, int n, bool is_directed = false) {
+    static Spectral_Graph from_edges(const std::vector<edge>& edges, int n, bool is_directed = false) {
         matrix adj(n, std::vector<double>(n, 0.0));
         for (const auto& [u, v, w] : edges) {
             if (u < 0 || u >= n || v < 0 || v >= n) {
@@ -48,7 +48,7 @@ public:
                 adj[v][u] = w;
             }
         }
-        return SpectralGraph(std::move(adj), is_directed);
+        return Spectral_Graph(std::move(adj), is_directed);
     }
 
     // Compute eigenvalues of Laplacian matrix
@@ -148,7 +148,6 @@ public:
         return static_cast<size_t>(is_directed_ ? total : total / 2);
     }
 
-    // Getters
     const matrix& get_adjacency() const { return adjacency_; }
     const matrix& get_laplacian() const { return laplacian_; }
     const matrix& get_degree_matrix() const { return degree_matrix_; }
@@ -161,7 +160,6 @@ private:
     size_t size_;
     bool is_directed_;
 
-    // Validate adjacency matrix properties
     void validate_adjacency_matrix() const {
         if (size_ == 0) {
             throw std::invalid_argument("Adjacency matrix cannot be empty");
@@ -210,7 +208,6 @@ private:
         return lap;
     }
 
-    // Convert matrix to Eigen format for spectral computations
     static Eigen::MatrixXd to_eigen_matrix(const matrix& mat) {
         size_t n = mat.size();
         Eigen::MatrixXd eigen_mat(n, n);
@@ -224,11 +221,11 @@ private:
 };
 
 // Sparse graph implementation for large-scale spectral analysis
-class SparseSpectralGraph {
+class Sparse_Spectral_Graph {
 public:
     using sparse_matrix = Eigen::SparseMatrix<double>;
 
-    SparseSpectralGraph(const std::vector<edge>& edges, int n, bool is_directed = false)
+    Sparse_Spectral_Graph(const std::vector<edge>& edges, int n, bool is_directed = false)
         : size_(n), is_directed_(is_directed) {
         std::vector<Eigen::Triplet<double>> triplets;
         for (const auto& [u, v, w] : edges) {
@@ -256,11 +253,11 @@ public:
         }
         degree_matrix_.setFromTriplets(deg_triplets.begin(), deg_triplets.end());
 
-        // Compute Laplacian L = D - A
+        // Laplacian L = D - A
         laplacian_ = degree_matrix_ - adjacency_;
     }
 
-    // Compute eigenvalues of sparse Laplacian
+    // Eigenvalues of sparse Laplacian
     std::vector<double> eigenvalues() const {
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(laplacian_);
         if (solver.info() != Eigen::Success) {
