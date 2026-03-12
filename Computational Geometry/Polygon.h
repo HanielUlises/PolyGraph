@@ -3,49 +3,61 @@
 #include "Vector.h"
 
 #include <list>
+#include <vector>
 #include <memory>
 #include <concepts>
+#include <iostream>
 
 template <typename T>
 concept Real = std::floating_point<T>;
 
-template <class T, size_t dim>
+template <Real T, size_t dim>
 struct Vertex {
     GeomCore::Vector<T, dim> point;
+
     std::shared_ptr<Vertex<T, dim>> next;
     std::weak_ptr<Vertex<T, dim>> prev;
 
-    Vertex(GeomCore::Vector<T, dim> &_point, std::shared_ptr<Vertex<T,dim>> _next, std::weak_ptr<Vertex<T, dim>> _prev) :
-        point(_point), next(std::move(_next)), prev(std::move(_prev))   {}
+    Vertex(const GeomCore::Vector<T, dim>& p)
+        : point(p), next(nullptr), prev() {}
 };
 
-template <class T, size_t dime = R3>
-requires Real<T>
+template <Real T, size_t dim = R3>
 class Polygon {
-        std::vector<Vertex<T, dim>> vertex_list;
-    public:
-        Polygon(std::list<GeomCore::Vector<T,dim>> &points) {
-            const int size = points.size();
+private:
+    std::vector<std::shared_ptr<Vertex<T, dim>>> vertex_list;
 
-            if(size < 3) {
-                std::cout << "Not enough points to construct a polygon" << std::endl;
-            }
+public:
+    Polygon(const std::list<GeomCore::Vector<T, dim>>& points) {
+        size_t size = points.size();
 
-            for (auto _point: points) 
-                vertex_list.emplace_back(Vertex(_point));
-            
-            for(size_t i = 0; i < size; i++) {
-                vertex_list[i].next = &vertex_list[(i + 1) % size];
-                
-                if(i != 0) 
-                    vertex_list[i].prev = &vertex_list[i - 1];
-                else
-                    vertex_list[i].prev = &vertex_list[size - 1];
-            }
-                
+        if (size < 3) {
+            std::cerr << "Not enough points to construct a polygon\n";
+            return;
         }
 
+        for (const auto& p : points) {
+            vertex_list.push_back(std::make_shared<Vertex<T, dim>>(p));
+        }
+
+        for (size_t i = 0; i < size; i++) {
+            auto& current = vertex_list[i];
+            auto& next = vertex_list[(i + 1) % size];
+            auto& prev = vertex_list[(i + size - 1) % size];
+
+            current->next = next;
+            current->prev = prev;
+        }
+    }
+
+    size_t size() const {
+        return vertex_list.size();
+    }
+
+    std::shared_ptr<Vertex<T, dim>> operator[](size_t i) const {
+        return vertex_list[i];
+    }
 };
 
-typedef Polygon<Real, 2> PolygonS2d;
-typedef Polygon<Real, 3> PolygonS3d;
+using PolygonS2d = Polygon<double, 2>;
+using PolygonS3d = Polygon<double, 3>;
