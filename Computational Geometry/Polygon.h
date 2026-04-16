@@ -24,39 +24,39 @@ struct Vertex {
 
 template <Real T, size_t dim = R3>
 class Polygon {
-private:
-    std::vector<std::shared_ptr<Vertex<T, dim>>> vertex_list;
+    private:
+        std::vector<std::shared_ptr<Vertex<T, dim>>> vertex_list;
 
-public:
-    Polygon(const std::list<GeomCore::Vector<T, dim>>& points) {
-        size_t size = points.size();
+    public:
+        Polygon(const std::list<GeomCore::Vector<T, dim>>& points) {
+            size_t size = points.size();
 
-        if (size < 3) {
-            std::cerr << "Not enough points to construct a polygon\n";
-            return;
+            if (size < 3) {
+                std::cerr << "Not enough points to construct a polygon\n";
+                return;
+            }
+
+            for (const auto& p : points) {
+                vertex_list.push_back(std::make_shared<Vertex<T, dim>>(p));
+            }
+
+            for (size_t i = 0; i < size; i++) {
+                auto& current = vertex_list[i];
+                auto& next = vertex_list[(i + 1) % size];
+                auto& prev = vertex_list[(i + size - 1) % size];
+
+                current->next = next;
+                current->prev = prev;
+            }
         }
 
-        for (const auto& p : points) {
-            vertex_list.push_back(std::make_shared<Vertex<T, dim>>(p));
+        size_t size() const {
+            return vertex_list.size();
         }
 
-        for (size_t i = 0; i < size; i++) {
-            auto& current = vertex_list[i];
-            auto& next = vertex_list[(i + 1) % size];
-            auto& prev = vertex_list[(i + size - 1) % size];
-
-            current->next = next;
-            current->prev = prev;
+        std::shared_ptr<Vertex<T, dim>> operator[](size_t i) const {
+            return vertex_list[i];
         }
-    }
-
-    size_t size() const {
-        return vertex_list.size();
-    }
-
-    std::shared_ptr<Vertex<T, dim>> operator[](size_t i) const {
-        return vertex_list[i];
-    }
 };
 
 using PolygonS2d = Polygon<double, 2>;
