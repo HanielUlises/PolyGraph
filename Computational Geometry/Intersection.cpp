@@ -14,8 +14,8 @@
  * @param c, d   Endpoints of the second segment CD
  * @return true  if the segments intersect (including touching at endpoints or overlapping), false otherwise
  */
-bool GeomCore::intersection(const Point2d& a, const Point2d& b,
-                            const Point2d& c, const Point2d& d)
+bool GeomCore::intersection(const PointR2& a, const PointR2& b,
+                            const PointR2& c, const PointR2& d)
 {
     // Compute the oriented position (orientation) of points C and D with respect to directed line AB
     auto ab_c = orientation_2d(a, b, c);   // ccw(a,b,c) ∈ {LEFT, RIGHT, BETWEEN, ORIGIN, DESTINATION}
@@ -66,9 +66,9 @@ bool GeomCore::intersection(const Point2d& a, const Point2d& b,
  * @param[out] intersection  The computed intersection point (valid only on success)
  * @return true if the lines are not parallel and an intersection exists, false otherwise
  */
-bool GeomCore::intersection(const Point2d& a, const Point2d& b,
-                            const Point2d& c, const Point2d& d,
-                            Point2d& _intersection)
+bool GeomCore::intersection(const PointR2& a, const PointR2& b,
+                            const PointR2& c, const PointR2& d,
+                            PointR2& _intersection)
 {
     Vector2f AB = b - a;          // Direction vector of first line
     Vector2f CD = d - c;          // Direction vector of second line
@@ -115,7 +115,7 @@ bool GeomCore::intersection(const Point2d& a, const Point2d& b,
  * @return true if lines intersect at a single point, false if parallel/coincident
  */
 bool GeomCore::intersection(const Line2d& l1, const Line2d& l2,
-                            Point2d& _intersection)
+                            PointR2& _intersection)
 {
     auto l1_start = l1.get_point();
     auto l1_end   = l1_start + l1.get_direction();
@@ -126,7 +126,7 @@ bool GeomCore::intersection(const Line2d& l1, const Line2d& l2,
     return intersection(l1_start, l1_end, l2_start, l2_end, _intersection);
 }
 
-bool GeomCore::intersection(const Line3d& line, const Plane_f& plane, Point3d& point) {
+bool GeomCore::intersection(const Line3d& line, const Plane_f& plane, PointR3& point) {
     auto n = plane.get_normal();
     auto D = plane.get_d();
     auto d = line.get_direction();

@@ -5,13 +5,13 @@
 #include "Plane.h"
 
 namespace GeomCore{
-    bool intersection(const Point2d&, const Point2d&, const Point2d&,
-                     const Point2d&); 
+    bool intersection(const PointR2&, const PointR2&, const PointR2&,
+                     const PointR2&); 
 
-    bool intersection(const Point2d&, const Point2d&, const Point2d&,
-                     const Point2d&, const Point2d&); 
+    bool intersection(const PointR2&, const PointR2&, const PointR2&,
+                     const PointR2&, const PointR2&); 
 
-    bool intersection(const Line2d&, const Line2d&, const Point2d&); 
-    bool intersection(const Line3d&, const Plane_f&, Point3d&);
+    bool intersection(const Line2d&, const Line2d&, const PointR2&); 
+    bool intersection(const Line3d&, const Plane_f&, PointR3);
     bool intersection(const Plane_f&, const Plane_f&, Line3d&);
 }
