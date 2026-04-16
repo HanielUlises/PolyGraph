@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Point.h"
+#include "Polygon.h"
+
+#include <memory>
 
 namespace GeomCore {
     // Directions
@@ -12,12 +15,14 @@ namespace GeomCore {
     const int DESTINATION = 4; // Point c coincides with point b
     const int BETWEEN = 5;     // Point c lies on line segment ab between a and b
 
-    double area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &c);
-    int orientation_2d(const Point2d &a, const Point2d &b, const Point2d &c);
+    double area_triangle_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c);
+    int orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c);
 
     bool collinear(const Vector3f& a, const Vector3f& b);
-    bool collinear(const Point3d& a, const Point3d& b, const Point3d& c);
+    bool collinear(const PointR3& a, const PointR3& b, const PointR3& c);
 
     bool coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c);
-    bool coplaner(const Point3d& a, const Point3d& b, const Point3d& c, const Point3d& d);
+    bool coplaner(const PointR3& a, const PointR3& b, const PointR3& c, const PointR3& d);
+
+    bool is_diagonal(const std::shared_ptr<VertexR2> v1, const std::shared_ptr<VertexR2> v2, std::shared_ptr<PolygonR2> poly = nullptr);
 }

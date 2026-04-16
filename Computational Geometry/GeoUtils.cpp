@@ -1,6 +1,7 @@
 #include "GeoUtils.h"
+#include "Intersection.h"
 
-double GeomCore::area_triangle_2d(const Point2d &a, const Point2d &b, const Point2d &c){
+double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
     auto AB = b - a;
     auto AC = c - a;
 
@@ -8,7 +9,7 @@ double GeomCore::area_triangle_2d(const Point2d &a, const Point2d &b, const Poin
     return result / 2;
 }
 
-int GeomCore::orientation_2d(const Point2d &a, const Point2d &b, const Point2d &c){
+int GeomCore::orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
     auto area = area_triangle_2d(a, b, c);
     
     if(area > 0 && area < TOLERANCE)
@@ -73,7 +74,7 @@ bool GeomCore::collinear(const Vector3f& a, const Vector3f& b){
  * This is implemented by computing the direction vectors from A and reusing
  * the vector-based collinear() test above.
  */
-bool GeomCore::collinear(const Point3d& a, const Point3d& b, const Point3d& c){
+bool GeomCore::collinear(const PointR3& a, const PointR3& b, const PointR3& c){
     auto AB = b - a;
     auto AC = c - a;
     return collinear(AB, AC);
@@ -106,10 +107,39 @@ bool GeomCore::coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c)
  * direction vectors from A being zero, or equivalently, the volume of the
  * tetrahedron formed by the four points being zero.
  */
-bool GeomCore::coplaner(const Point3d& a, const Point3d& b, const Point3d& c, const Point3d& d){
+bool GeomCore::coplaner(const PointR3& a, const PointR3& b, const PointR3& c, const PointR3& d){
     auto AB = b - a;
     auto AC = c - a;
     auto AD = d - a;
 
     return coplaner(AB, AC, AD);
+}
+
+bool GeomCore::is_diagonal(const std::shared_ptr<VertexR2> v1, const std::shared_ptr<VertexR2> v2, std::shared_ptr<PolygonR2> poly) {
+    bool prospect = true;
+    std::vector<std::shared_ptr<VertexR2>> vertices;
+
+    if(poly) 
+        vertices = poly-> get_vertices();
+    else {
+        auto vertex_ptr = v1 -> next;
+        vertices.emplace_back(v1);
+        while(vertex_ptr != v1) {
+            vertices.emplace_back(vertex_ptr);
+            vertex_ptr = vertex_ptr -> next;
+        }
+    }
+
+    VertexR2 *current, *next;
+    do {
+        next = current -> next.get();
+        if(current != v1.get() && next != v1.get() && current != v2.get() && next != v2.get() 
+                && GeomCore::intersection(v1 -> point, v2 -> point, current -> point, next -> point)) {
+            prospect = false;
+            break;
+        }
+        current = next;
+    } while(current != vertices[0].get());
+
+    return false;
 }
