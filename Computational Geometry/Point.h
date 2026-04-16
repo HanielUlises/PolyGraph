@@ -3,8 +3,6 @@
 #include "Vector.h"
 
 namespace GeomCore{
-    typedef Vector2f Point2d;
-    typedef Vector3f Point3d;
-
-    
+    typedef Vector2f PointR2;
+    typedef Vector3f PointR3;
 }

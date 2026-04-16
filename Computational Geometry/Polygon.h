@@ -50,6 +50,10 @@ class Polygon {
             }
         }
 
+        const std::vector<std::shared_ptr<Vertex<T, dim>>> &get_vertices() const {
+            return vertex_list;
+        }
+
         size_t size() const {
             return vertex_list.size();
         }
@@ -59,5 +63,8 @@ class Polygon {
         }
 };
 
-using PolygonS2d = Polygon<double, 2>;
-using PolygonS3d = Polygon<double, 3>;
+using VertexR2 = Vertex<double, 2>;
+using VertexR3 = Vertex<double, 3>; 
+
+using PolygonR2 = Polygon<double, 2>;
+using PolygonR3 = Polygon<double, 3>;
