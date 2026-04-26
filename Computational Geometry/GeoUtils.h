@@ -16,7 +16,10 @@ namespace GeomCore {
     const int BETWEEN = 5;     // Point c lies on line segment ab between a and b
 
     double area_triangle_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c);
-    int orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c);
+    static int orientation_R2(const PointR2& a, const PointR2& b, const PointR2& c);
+
+    static bool left(const PointR2& a, const PointR2& b, const PointR2& c);
+    static bool left_or_beyond(const PointR2& a, const PointR2& b, const PointR2& c);
 
     bool collinear(const Vector3f& a, const Vector3f& b);
     bool collinear(const PointR3& a, const PointR3& b, const PointR3& c);

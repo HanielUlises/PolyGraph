@@ -10,8 +10,8 @@ double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const Poin
 }
 
 int GeomCore::orientation_R2(const PointR2& a, const PointR2& b, const PointR2& c) {
-    Vector2f ab = b - a;
-    Vector2f ac = c - a;
+    Vector2d ab = b - a;
+    Vector2d ac = c - a;
 
     double det = cross_product_R2(ab, ac);
 
@@ -44,6 +44,15 @@ int GeomCore::orientation_R2(const PointR2& a, const PointR2& b, const PointR2& 
     return BETWEEN;
 }
 
+bool GeomCore::left(const PointR2& a, const PointR2& b, const PointR2& c) {
+    return orientation_R2(a, b, c) == LEFT;
+}
+
+bool GeomCore::left_or_beyond(const PointR2& a, const PointR2& b, const PointR2& c) {
+    int o = orientation_R2(a, b, c);
+    return o == LEFT || o == BEYOND;
+}
+
 /**
  * Checks whether two 3D vectors a and b are collinear (parallel or anti-parallel),
  * including the degenerate cases where one or both vectors are zero.
@@ -63,7 +72,7 @@ int GeomCore::orientation_R2(const PointR2& a, const PointR2& b, const PointR2& 
  *
  * Note: The zero vector is considered collinear with every vector (including itself).
  */
-bool GeomCore::collinear(const Vector3f& a, const Vector3f& b){
+bool GeomCore::collinear(const Vector3d& a, const Vector3d& b){
     auto v1 = a[X] * b[Y] - a[Y] * b[X];
     auto v2 = a[Y] * b[Z] - a[Z] * b[Y];
     auto v3 = a[X] * b[Z] - a[Z] * b[X];
@@ -98,7 +107,7 @@ bool GeomCore::collinear(const PointR3& a, const PointR3& b, const PointR3& c){
  * the determinant of the matrix formed by the three vectors.
  */
 
-bool GeomCore::coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c){
+bool GeomCore::coplaner(const Vector3d& a, const Vector3d& b, const Vector3d& c){
     float value = scaler_triple_product(a, b, c);
     return is_equal_1D(value, 0.0f);
 }

@@ -65,8 +65,8 @@ public:
     void normalize();
 };
 
-using Vector2f = Vector<float, R2>;
-using Vector3f = Vector<float, R3>;
+using Vector2d = Vector<double, R2>;
+using Vector3d = Vector<double, R3>;
 
 inline bool is_equal_1D(double a, double b, double epsilon = 1e-5) {
     return std::fabs(a - b) <= epsilon;
@@ -204,17 +204,17 @@ inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vec
     return product;
 }
 
-inline Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2) {
+inline Vector3d cross_product_R3(const Vector3d& v1, const Vector3d& v2) {
     float _x = v1[Y] * v2[Z] - v1[Z] * v2[Y];
     float _y = v1[Z] * v2[X] - v1[X] * v2[Z];
     float _z = v1[X] * v2[Y] - v1[Y] * v2[X];
-    return Vector3f(_x, _y, _z);
+    return Vector3d(_x, _y, _z);
 }
 
 // Cross product 
-float cross_product_R2(const Vector2f& v1, const Vector2f& v2);
-Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2);
+float cross_product_R2(const Vector2d& v1, const Vector2d& v2);
+Vector3d cross_product_R3(const Vector3d& v1, const Vector3d& v2);
 
-float scaler_triple_product(const Vector3f& v1, const Vector3f& v2, const Vector3f& v3);
+float scaler_triple_product(const Vector3d& v1, const Vector3d& v2, const Vector3d& v3);
 
 } // namespace GeomCore
