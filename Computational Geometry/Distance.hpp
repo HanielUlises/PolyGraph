@@ -7,5 +7,5 @@ namespace GeomCore{
     coord_type distance(Line3d& line, PointR3& c);
     
     template<typename coord_type>
-    coord_type distance(Plane_f& p, PointR3& c);
+    coord_type distance(Plane_d& p, PointR3& c);
 }

@@ -11,7 +11,7 @@ coord_type GeomCore::distance (Line3d &line, PointR3& c){
 }
 
 template<typename coord_type>
-coord_type GeomCore::distance(Plane_f& p, PointR3& c){
+coord_type GeomCore::distance(Plane_d& p, PointR3& c){
     auto result = dot_product(p.get_normal(), c) - p.get_d();
     return result;
 }

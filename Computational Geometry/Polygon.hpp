@@ -13,6 +13,9 @@ concept Real = std::floating_point<T>;
 
 template <Real T, size_t dim>
 struct Vertex {
+    bool is_ear = false;
+    bool is_processed = false;
+
     GeomCore::Vector<T, dim> point;
 
     std::shared_ptr<Vertex<T, dim>> next;
