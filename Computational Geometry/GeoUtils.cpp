@@ -9,30 +9,36 @@ double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const Poin
     return result / 2;
 }
 
-int GeomCore::orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
-    auto area = area_triangle_2d(a, b, c);
-    
-    if(area > 0 && area < TOLERANCE)
-        area = 0;
-    else if(area > 0 && area > TOLERANCE)
-        area = 0;
-
-
+int GeomCore::orientation_R2(const PointR2& a, const PointR2& b, const PointR2& c) {
     Vector2f ab = b - a;
-    Vector2f ac = a - c;
-    
-    if(area > 0)
-        return LEFT;
-    else if(area < 0)
-        return RIGHT;
-    else if ((ab[X] * ac[X] < 0) || (ab[Y] * ac[Y] < 0))
-        return BEHIND; 
+    Vector2f ac = c - a;
 
-    if(ab.magnitude() < ac.magnitude())
+    double det = cross_product_R2(ab, ac);
+
+    if (std::abs(det) < TOLERANCE)
+        det = 0.0;
+
+    if (det > 0.0)
+        return LEFT;
+
+    if (det < 0.0)
+        return RIGHT;
+
+    double dot = ab[X] * ac[X] + ab[Y] * ac[Y];
+
+    if (dot < 0.0)
+        return BEHIND;
+
+    double norm_ab = ab[X] * ab[X] + ab[Y] * ab[Y];
+    double norm_ac = ac[X] * ac[X] + ac[Y] * ac[Y];
+
+    if (norm_ac > norm_ab)
         return BEYOND;
-    else if (a == c)
+
+    if (a == c)
         return ORIGIN;
-    else if (b == c)
+
+    if (b == c)
         return DESTINATION;
 
     return BETWEEN;
@@ -118,7 +124,7 @@ bool GeomCore::coplaner(const PointR3& a, const PointR3& b, const PointR3& c, co
 static bool interior_check(const VertexR2 *v1, const VertexR2 *v2) {
     if (GeomCore::left_or_beyond(v1 -> point, v1 -> next -> point, v1-> prev.lock()  -> point)) {
         return GeomCore::left(v1 -> point, v2 -> point, v1 -> prev.lock()  -> point) &&
-               GeomCore::left(v2 -> point, v1 -> point, v1 -> prev.lock()  -> point)
+               GeomCore::left(v2 -> point, v1 -> point, v1 -> prev.lock()  -> point);
     }
 }
 
