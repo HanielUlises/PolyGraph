@@ -115,6 +115,13 @@ bool GeomCore::coplaner(const PointR3& a, const PointR3& b, const PointR3& c, co
     return coplaner(AB, AC, AD);
 }
 
+static bool interior_check(const VertexR2 *v1, const VertexR2 *v2) {
+    if (GeomCore::left_or_beyond(v1 -> point, v1 -> next -> point, v1 -> prev -> point)) {
+        return GeomCore::left(v1 -> point, v2 -> point, v1 -> prev -> point) &&
+               GeomCore::left(v2 -> point, v1 -> point, v1 -> prev -> point)
+    }
+}
+
 bool GeomCore::is_diagonal(const std::shared_ptr<VertexR2> v1, const std::shared_ptr<VertexR2> v2, std::shared_ptr<PolygonR2> poly) {
     bool prospect = true;
     std::vector<std::shared_ptr<VertexR2>> vertices;
