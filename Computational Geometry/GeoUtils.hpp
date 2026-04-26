@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Point.h"
-#include "Polygon.h"
+#include "Point.hpp"
+#include "Polygon.hpp"
 
 #include <memory>
 
@@ -21,10 +21,10 @@ namespace GeomCore {
     static bool left(const PointR2& a, const PointR2& b, const PointR2& c);
     static bool left_or_beyond(const PointR2& a, const PointR2& b, const PointR2& c);
 
-    bool collinear(const Vector3f& a, const Vector3f& b);
+    bool collinear(const Vector3d& a, const Vector3d& b);
     bool collinear(const PointR3& a, const PointR3& b, const PointR3& c);
 
-    bool coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c);
+    bool coplaner(const Vector3d& a, const Vector3d& b, const Vector3d& c);
     bool coplaner(const PointR3& a, const PointR3& b, const PointR3& c, const PointR3& d);
 
     bool is_diagonal(const std::shared_ptr<VertexR2> v1, const std::shared_ptr<VertexR2> v2, std::shared_ptr<PolygonR2> poly = nullptr);

@@ -1,6 +1,6 @@
-#include "Line.h"
-#include "Plane.h"
-#include "Core.h"
+#include "Line.hpp"
+#include "Plane.hpp"
+#include "Core.hpp"
 
 namespace GeomCore {
     float angle_lines_2D(const Line2d& l1, const Line2d& l2);

@@ -1,5 +1,5 @@
-#include "GeoUtils.h"
-#include "Intersection.h"
+#include "GeoUtils.hpp"
+#include "Intersection.hpp"
 
 double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
     auto AB = b - a;

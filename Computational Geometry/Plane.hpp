@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Vector.h"
-#include "Point.h"
+#include "Vector.hpp"
+#include "Point.hpp"
 
 namespace GeomCore{
     template <class coord_type>
     class Plane{
             Vector3f normal;
-            float d = 0;
+            double d = 0;
         public:
             Plane(){}
 
-            Plane(Vector3f &_normal, float _constant) : normal(_normal), d(_constant) {
+            Plane(Vector3f &_normal, double _constant) : normal(_normal), d(_constant) {
                 normal.normalize();
             }
 
@@ -28,10 +28,10 @@ namespace GeomCore{
                 return normal
             }
 
-            float get_d() const{
+            double get_d() const{
                 return d;
             }
     };
 
-    typedef Plane<float> Plane_f;
+    typedef Plane<double> Plane_d;
 }

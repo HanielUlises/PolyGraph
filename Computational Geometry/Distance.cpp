@@ -1,4 +1,4 @@
-#include "Distance.h"
+#include "Distance.hpp"
 
 template<typename coord_type>
 coord_type GeomCore::distance (Line3d &line, PointR3& c){

@@ -1,4 +1,4 @@
-#include "Angle.h"
+#include "Angle.hpp"
 
 template<class T, size_t dim>
 static float get_angle(const GeomCore::Vector<T, dim>& v1,

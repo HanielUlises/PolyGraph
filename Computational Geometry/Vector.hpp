@@ -6,7 +6,7 @@
 #include <limits>
 #include <type_traits>
 
-#include "Core.h"
+#include "Core.hpp"
 
 namespace GeomCore {
 

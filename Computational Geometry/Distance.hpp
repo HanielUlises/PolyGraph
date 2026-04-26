@@ -1,6 +1,6 @@
-#include "Point.h"
-#include "Line.h"
-#include "Plane.h"
+#include "Point.hpp"
+#include "Line.hpp"
+#include "Plane.hpp"
 
 namespace GeomCore{
     template<typename coord_type>

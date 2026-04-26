@@ -1,4 +1,4 @@
-#include "Vector.h"
+#include "Vector.hpp"
 
 float GeomCore::cross_product_R2(const Vector2d &v1, const Vector2d &v2){
     return v1[X] * v2 [Y] - v1[Y] * v2[X];

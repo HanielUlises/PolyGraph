@@ -1,6 +1,6 @@
-#include "Core.h"
-#include "Intersection.h"
-#include "GeoUtils.h"
+#include "Core.hpp"
+#include "Intersection.hpp"
+#include "GeoUtils.hpp"
 
 /**
  * @brief Determines whether two line segments AB and CD intersect (properly or improperly).
@@ -18,12 +18,12 @@ bool GeomCore::intersection(const PointR2& a, const PointR2& b,
                             const PointR2& c, const PointR2& d)
 {
     // Compute the oriented position (orientation) of points C and D with respect to directed line AB
-    auto ab_c = orientation_2d(a, b, c);   // ccw(a,b,c) ∈ {LEFT, RIGHT, BETWEEN, ORIGIN, DESTINATION}
-    auto ab_d = orientation_2d(a, b, d);
+    auto ab_c = GeomCore::orientation_R2(a, b, c);   // ccw(a,b,c) ∈ {LEFT, RIGHT, BETWEEN, ORIGIN, DESTINATION}
+    auto ab_d = GeomCore::orientation_R2(a, b, d);
 
     // Compute the oriented position of points A and B with respect to directed line CD
-    auto cd_a = orientation_2d(c, d, a);
-    auto cd_b = orientation_2d(c, d, b);
+    auto cd_a = GeomCore::orientation_R2(c, d, a);
+    auto cd_b = GeomCore::orientation_R2(c, d, b);
 
     // Degenerate cases: any endpoint lies on the other segment.
     // BETWEEN  → point is strictly inside the segment (not including endpoints)
@@ -70,11 +70,11 @@ bool GeomCore::intersection(const PointR2& a, const PointR2& b,
                             const PointR2& c, const PointR2& d,
                             PointR2& _intersection)
 {
-    Vector2f AB = b - a;          // Direction vector of first line
-    Vector2f CD = d - c;          // Direction vector of second line
+    Vector2d AB = b - a;          // Direction vector of first line
+    Vector2d CD = d - c;          // Direction vector of second line
 
     // Normal vector to CD (rotated 90° CCW): n = (CD.y, -CD.x)
-    Vector2f n(CD[Y], -CD[X]);
+    Vector2d n(CD[Y], -CD[X]);
 
     // Scalar projection denominator: n · AB
     // If zero → AB ∥ CD (lines parallel or anti-parallel)
@@ -126,7 +126,7 @@ bool GeomCore::intersection(const Line2d& l1, const Line2d& l2,
     return intersection(l1_start, l1_end, l2_start, l2_end, _intersection);
 }
 
-bool GeomCore::intersection(const Line3d& line, const Plane_f& plane, PointR3& point) {
+bool GeomCore::intersection(const Line3d& line, const Plane_d& plane, PointR3& point) {
     auto n = plane.get_normal();
     auto D = plane.get_d();
     auto d = line.get_direction();
@@ -146,12 +146,12 @@ bool GeomCore::intersection(const Line3d& line, const Plane_f& plane, PointR3& p
     }
 }
 
-bool GeomCore::intersection(const Plane_f& p1, const Plane_f& p2, Line3d& l){
-    Vector3f n1 = p1.get_normal();
-    Vector3f n2 = p2.get_normal();
+bool GeomCore::intersection(const Plane_d& p1, const Plane_d& p2, Line3d& l){
+    Vector3d n1 = p1.get_normal();
+    Vector3d n2 = p2.get_normal();
     
-    float d1 = p1.get_d();
-    float d2 = p2.get_d();
+    double d1 = p1.get_d();
+    double d2 = p2.get_d();
 
     auto direction = cross_product_R3(n1, n2);
 
