@@ -28,8 +28,8 @@ void GeomCore::triangulate_earclipping(PolygonR2 *poly, std::vector<Edge2d> &edg
             if(v2 -> is_ear && !v2 -> is_processed) {
                 v3 = v2 -> next.get();
                 v4 = v3 -> next.get();
-                v1 = v2 -> prev.get();
-                v0 = v1 -> prev.get();
+                v1 = v2 -> prev.lock().get();
+                v0 = v1 -> prev.lock().get();
             }
         }
     }
