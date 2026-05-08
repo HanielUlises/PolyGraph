@@ -24,7 +24,7 @@ void GeomCore::triangulate_earclipping(PolygonR2 *poly, std::vector<EdgeR2> &edg
 
     while(no_vertex_to_process < 3) {
         for(size_t i = 0; i < vertex_list.size(); i++) {
-            v2 = vertex_list[i].get();
+            v2 = vertex_list[i];
             if(v2 -> is_ear && !v2 -> is_processed) {
                 v3 = v2 -> next.get();
                 v4 = v3 -> next();
