@@ -13,7 +13,7 @@ static T get_angle(const GeomCore::Vector<T, dim>& v1,
         return 0.0f;
     }
 
-    // cosθ = |v1·v2| / (||v1|| ||v2||)   → guarantees θ ∈ [0, 90°]
+    // cosθ = |v1·v2| / (||v1|| ||v2||) -> guarantees θ ∈ [0, 90°]
     // To get the full [0, 180°] range we keep the absolute value
     const double cos_theta = std::fabs(dot_product(v1, v2)) / (mag1 * mag2);
 
