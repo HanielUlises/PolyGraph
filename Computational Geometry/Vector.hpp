@@ -24,7 +24,7 @@ class Vector {
 
     std::array<coordinate_type, dimension> coordinates;
 
-    friend float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2);
+    friend coordinate_type dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2);
 
 public:
     Vector() : coordinates{} {}
@@ -61,14 +61,17 @@ public:
 
     // Functions
     void assign(size_t dim, coordinate_type value);
-    float magnitude() const;
+
+    coordinate_type magnitude() const;
     void normalize();
 };
 
 using Vector2d = Vector<double, R2>;
 using Vector3d = Vector<double, R3>;
 
-inline bool is_equal_1D(double a, double b, double epsilon = 1e-5) {
+template <typename T>
+requires Real<T>
+inline bool is_equal_1D(T a, T b, T epsilon = 1e-5) {
     return std::fabs(a - b) <= epsilon;
 }
 
@@ -177,14 +180,15 @@ inline void Vector<coordinate_type, dimension>::assign(size_t dim, coordinate_ty
 }
 
 template <class coordinate_type, size_t dimension>
-inline float Vector<coordinate_type, dimension>::magnitude() const {
-    float value = 0.0f;
-    for (size_t i = 0; i < dimension; ++i) {
-        value += static_cast<float>(coordinates[i] * coordinates[i]);
-    }
-    return std::sqrt(value);
-}
+inline coordinate_type Vector<coordinate_type, dimension>::magnitude() const {
+    coordinate_type value = coordinate_type{0};
 
+    for (size_t i = 0; i < dimension; ++i) {
+        value += coordinates[i] * coordinates[i];
+    }
+
+    return static_cast<coordinate_type>(std::sqrt(value));
+}
 template <class coordinate_type, size_t dimension>
 inline void Vector<coordinate_type, dimension>::normalize() {
     float mag = magnitude();
@@ -196,8 +200,8 @@ inline void Vector<coordinate_type, dimension>::normalize() {
 }
 
 template <class coordinate_type, size_t dimension>
-inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
-    float product = 0.0f;
+inline coordinate_type dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
+    coordinate_type product = 0.0f;
     for (size_t i = 0; i < dimension; ++i) {
         product += static_cast<float>(v1.coordinates[i] * v2.coordinates[i]);
     }

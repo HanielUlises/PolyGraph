@@ -80,7 +80,7 @@ bool GeomCore::intersection(const PointR2& a, const PointR2& b,
     // If zero → AB ∥ CD (lines parallel or anti-parallel)
     auto denominator = dot_product(n, AB);
 
-    if (is_equal_1D(denominator, 0.0f))   // Parallel (or coincident) lines
+    if (is_equal_1D(denominator, 0.0))   // Parallel (or coincident) lines
     {
         return false;
     }
@@ -134,7 +134,7 @@ bool GeomCore::intersection(const Line3d& line, const Plane_d& plane, PointR3& p
 
     auto nd = dot_product(n, d);
 
-    if(!is_equal_1D(nd, 0)){
+    if(!is_equal_1D(nd, 0.0)){
         auto t = (-1 * dot_product(n, p) + D) / nd;
         point.assign(X, p[X] + t * d[X]);
         point.assign(Y, p[Y] + t * d[Y]);
@@ -155,7 +155,7 @@ bool GeomCore::intersection(const Plane_d& p1, const Plane_d& p2, Line3d& l){
 
     auto direction = cross_product_R3(n1, n2);
 
-    if(is_equal_1D(direction.magnitude(), 0)){
+    if(is_equal_1D(direction.magnitude(), 0.0)){
         return false;
     }
 
