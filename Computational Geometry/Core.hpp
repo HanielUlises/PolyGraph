@@ -20,6 +20,9 @@ namespace GeomCore {
     }
 
     template<typename T>
+    concept Real = std::is_floating_point_v<T>;
+
+    template<typename T>
     constexpr std::enable_if_t<std::is_floating_point_v<T>, T>
     radians_to_degrees(T radians) {
         return radians * (T(180.0) / detail::pi_v<T>);

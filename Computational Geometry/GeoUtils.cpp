@@ -77,7 +77,7 @@ bool GeomCore::collinear(const Vector3d& a, const Vector3d& b){
     auto v2 = a[Y] * b[Z] - a[Z] * b[Y];
     auto v3 = a[X] * b[Z] - a[Z] * b[X];
 
-    return is_equal_1D(v1, 0.0f) && is_equal_1D(v2, 0.0f) && is_equal_1D(v3, 0.0f);
+    return is_equal_1D(v1, 0.0) && is_equal_1D(v2, 0.0) && is_equal_1D(v3, 0.0);
 }
 
 /**
