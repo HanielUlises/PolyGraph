@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Vector.h"
+#include "Vector.hpp"
 
 namespace GeomCore{
-    typedef Vector2f PointR2;
-    typedef Vector3f PointR3;
+
+    using PointR2 = Vector2d;
+    using PointR3 = Vector3d;
 }

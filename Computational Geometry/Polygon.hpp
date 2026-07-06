@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector.h"
+#include "Vector.hpp"
 
 #include <list>
 #include <vector>
@@ -13,6 +13,9 @@ concept Real = std::floating_point<T>;
 
 template <Real T, size_t dim>
 struct Vertex {
+    bool is_ear = false;
+    bool is_processed = false;
+
     GeomCore::Vector<T, dim> point;
 
     std::shared_ptr<Vertex<T, dim>> next;
@@ -62,6 +65,26 @@ class Polygon {
             return vertex_list[i];
         }
 };
+
+// bool collinear(const PointR3& a, const PointR3& b, const PointR3& c);
+bool is_convex(const std::shared_ptr<VertexR2>& a,
+               const std::shared_ptr<VertexR2>& b,
+               const std::shared_ptr<VertexR2>& c)
+{
+    const auto& pa = a->point;
+    const auto& pb = b->point;
+    const auto& pc = c->point;
+
+    // Compute 2D cross product:
+    // (b - a) x (c - b)
+    double cross =
+        (pb[0] - pa[0]) * (pc[1] - pb[1]) -
+        (pb[1] - pa[1]) * (pc[0] - pb[0]);
+
+    // For counter-clockwise polygons:
+    // cross > 0 => convex
+    return cross > 0.0;
+}
 
 using VertexR2 = Vertex<double, 2>;
 using VertexR3 = Vertex<double, 3>; 

@@ -1,4 +1,6 @@
-#include "Vector.h"
+#pragma once
+
+#include "Vector.hpp"
 
 namespace GeomCore{
     template <class coord_type, size_t dim = R3>
@@ -21,8 +23,8 @@ namespace GeomCore{
             void set_point(Vector<coord_type, dim>& _point);
     };
 
-    typedef Line<float, R2> Line2d;
-    typedef Line<float, R3> Line3d;
+    typedef Line<double, R2> Line2d;
+    typedef Line<double, R3> Line3d;
     
     template <class coord_type, size_t dim>
     inline Vector<coord_type, dim> Line<coord_type, dim>::get_point() const{
@@ -31,7 +33,7 @@ namespace GeomCore{
 
     template <class coord_type, size_t dim>
     inline Vector<coord_type, dim> Line<coord_type, dim>::get_direction() const{
-        return point;
+        return dir;
     }
 
     template <class coord_type, size_t dim>

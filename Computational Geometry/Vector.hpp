@@ -6,7 +6,7 @@
 #include <limits>
 #include <type_traits>
 
-#include "Core.h"
+#include "Core.hpp"
 
 namespace GeomCore {
 
@@ -24,7 +24,7 @@ class Vector {
 
     std::array<coordinate_type, dimension> coordinates;
 
-    friend float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2);
+    friend coordinate_type dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2);
 
 public:
     Vector() : coordinates{} {}
@@ -61,14 +61,17 @@ public:
 
     // Functions
     void assign(size_t dim, coordinate_type value);
-    float magnitude() const;
+
+    coordinate_type magnitude() const;
     void normalize();
 };
 
-using Vector2f = Vector<float, R2>;
-using Vector3f = Vector<float, R3>;
+using Vector2d = Vector<double, R2>;
+using Vector3d = Vector<double, R3>;
 
-inline bool is_equal_1D(double a, double b, double epsilon = 1e-5) {
+template <typename T>
+requires Real<T>
+inline bool is_equal_1D(T a, T b, T epsilon = 1e-5) {
     return std::fabs(a - b) <= epsilon;
 }
 
@@ -177,14 +180,15 @@ inline void Vector<coordinate_type, dimension>::assign(size_t dim, coordinate_ty
 }
 
 template <class coordinate_type, size_t dimension>
-inline float Vector<coordinate_type, dimension>::magnitude() const {
-    float value = 0.0f;
-    for (size_t i = 0; i < dimension; ++i) {
-        value += static_cast<float>(coordinates[i] * coordinates[i]);
-    }
-    return std::sqrt(value);
-}
+inline coordinate_type Vector<coordinate_type, dimension>::magnitude() const {
+    coordinate_type value = coordinate_type{0};
 
+    for (size_t i = 0; i < dimension; ++i) {
+        value += coordinates[i] * coordinates[i];
+    }
+
+    return static_cast<coordinate_type>(std::sqrt(value));
+}
 template <class coordinate_type, size_t dimension>
 inline void Vector<coordinate_type, dimension>::normalize() {
     float mag = magnitude();
@@ -196,25 +200,25 @@ inline void Vector<coordinate_type, dimension>::normalize() {
 }
 
 template <class coordinate_type, size_t dimension>
-inline float dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
-    float product = 0.0f;
+inline coordinate_type dot_product(const Vector<coordinate_type, dimension>& v1, const Vector<coordinate_type, dimension>& v2) {
+    coordinate_type product = 0.0f;
     for (size_t i = 0; i < dimension; ++i) {
         product += static_cast<float>(v1.coordinates[i] * v2.coordinates[i]);
     }
     return product;
 }
 
-inline Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2) {
+inline Vector3d cross_product_R3(const Vector3d& v1, const Vector3d& v2) {
     float _x = v1[Y] * v2[Z] - v1[Z] * v2[Y];
     float _y = v1[Z] * v2[X] - v1[X] * v2[Z];
     float _z = v1[X] * v2[Y] - v1[Y] * v2[X];
-    return Vector3f(_x, _y, _z);
+    return Vector3d(_x, _y, _z);
 }
 
 // Cross product 
-float cross_product_R2(const Vector2f& v1, const Vector2f& v2);
-Vector3f cross_product_R3(const Vector3f& v1, const Vector3f& v2);
+float cross_product_R2(const Vector2d& v1, const Vector2d& v2);
+Vector3d cross_product_R3(const Vector3d& v1, const Vector3d& v2);
 
-float scaler_triple_product(const Vector3f& v1, const Vector3f& v2, const Vector3f& v3);
+float scaler_triple_product(const Vector3d& v1, const Vector3d& v2, const Vector3d& v3);
 
 } // namespace GeomCore

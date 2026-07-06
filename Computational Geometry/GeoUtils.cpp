@@ -1,5 +1,5 @@
-#include "GeoUtils.h"
-#include "Intersection.h"
+#include "GeoUtils.hpp"
+#include "Intersection.hpp"
 
 double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
     auto AB = b - a;
@@ -9,33 +9,48 @@ double GeomCore::area_triangle_2d(const PointR2 &a, const PointR2 &b, const Poin
     return result / 2;
 }
 
-int GeomCore::orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &c){
-    auto area = area_triangle_2d(a, b, c);
-    
-    if(area > 0 && area < TOLERANCE)
-        area = 0;
-    else if(area > 0 && area > TOLERANCE)
-        area = 0;
+int GeomCore::orientation_R2(const PointR2& a, const PointR2& b, const PointR2& c) {
+    Vector2d ab = b - a;
+    Vector2d ac = c - a;
 
+    double det = cross_product_R2(ab, ac);
 
-    Vector2f ab = b - a;
-    Vector2f ac = a - c;
-    
-    if(area > 0)
+    if (std::abs(det) < TOLERANCE)
+        det = 0.0;
+
+    if (det > 0.0)
         return LEFT;
-    else if(area < 0)
-        return RIGHT;
-    else if ((ab[X] * ac[X] < 0) || (ab[Y] * ac[Y] < 0))
-        return BEHIND; 
 
-    if(ab.magnitude() < ac.magnitude())
+    if (det < 0.0)
+        return RIGHT;
+
+    double dot = ab[X] * ac[X] + ab[Y] * ac[Y];
+
+    if (dot < 0.0)
+        return BEHIND;
+
+    double norm_ab = ab[X] * ab[X] + ab[Y] * ab[Y];
+    double norm_ac = ac[X] * ac[X] + ac[Y] * ac[Y];
+
+    if (norm_ac > norm_ab)
         return BEYOND;
-    else if (a == c)
+
+    if (a == c)
         return ORIGIN;
-    else if (b == c)
+
+    if (b == c)
         return DESTINATION;
 
     return BETWEEN;
+}
+
+bool GeomCore::left(const PointR2& a, const PointR2& b, const PointR2& c) {
+    return orientation_R2(a, b, c) == LEFT;
+}
+
+bool GeomCore::left_or_beyond(const PointR2& a, const PointR2& b, const PointR2& c) {
+    int o = orientation_R2(a, b, c);
+    return o == LEFT || o == BEYOND;
 }
 
 /**
@@ -57,12 +72,12 @@ int GeomCore::orientation_2d(const PointR2 &a, const PointR2 &b, const PointR2 &
  *
  * Note: The zero vector is considered collinear with every vector (including itself).
  */
-bool GeomCore::collinear(const Vector3f& a, const Vector3f& b){
+bool GeomCore::collinear(const Vector3d& a, const Vector3d& b){
     auto v1 = a[X] * b[Y] - a[Y] * b[X];
     auto v2 = a[Y] * b[Z] - a[Z] * b[Y];
     auto v3 = a[X] * b[Z] - a[Z] * b[X];
 
-    return is_equal_1D(v1, 0.0f) && is_equal_1D(v2, 0.0f) && is_equal_1D(v3, 0.0f);
+    return is_equal_1D(v1, 0.0) && is_equal_1D(v2, 0.0) && is_equal_1D(v3, 0.0);
 }
 
 /**
@@ -92,7 +107,7 @@ bool GeomCore::collinear(const PointR3& a, const PointR3& b, const PointR3& c){
  * the determinant of the matrix formed by the three vectors.
  */
 
-bool GeomCore::coplaner(const Vector3f& a, const Vector3f& b, const Vector3f& c){
+bool GeomCore::coplaner(const Vector3d& a, const Vector3d& b, const Vector3d& c){
     float value = scaler_triple_product(a, b, c);
     return is_equal_1D(value, 0.0f);
 }
@@ -113,6 +128,13 @@ bool GeomCore::coplaner(const PointR3& a, const PointR3& b, const PointR3& c, co
     auto AD = d - a;
 
     return coplaner(AB, AC, AD);
+}
+
+static bool interior_check(const VertexR2 *v1, const VertexR2 *v2) {
+    if (GeomCore::left_or_beyond(v1 -> point, v1 -> next -> point, v1-> prev.lock()  -> point)) {
+        return GeomCore::left(v1 -> point, v2 -> point, v1 -> prev.lock()  -> point) &&
+               GeomCore::left(v2 -> point, v1 -> point, v1 -> prev.lock()  -> point);
+    }
 }
 
 bool GeomCore::is_diagonal(const std::shared_ptr<VertexR2> v1, const std::shared_ptr<VertexR2> v2, std::shared_ptr<PolygonR2> poly) {
