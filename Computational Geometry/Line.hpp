@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Vector.hpp"
 
 namespace GeomCore{
@@ -31,7 +33,7 @@ namespace GeomCore{
 
     template <class coord_type, size_t dim>
     inline Vector<coord_type, dim> Line<coord_type, dim>::get_direction() const{
-        return point;
+        return dir;
     }
 
     template <class coord_type, size_t dim>
