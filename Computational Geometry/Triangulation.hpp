@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Polygon.hpp"
 #include "GeoUtils.hpp"
 #include "Edge.hpp"
