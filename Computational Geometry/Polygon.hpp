@@ -66,8 +66,14 @@ class Polygon {
         }
 };
 
+using VertexR2 = Vertex<double, 2>;
+using VertexR3 = Vertex<double, 3>; 
+
+using PolygonR2 = Polygon<double, 2>;
+using PolygonR3 = Polygon<double, 3>;
+
 // bool collinear(const PointR3& a, const PointR3& b, const PointR3& c);
-bool is_convex(const std::shared_ptr<VertexR2>& a,
+inline bool is_convex(const std::shared_ptr<VertexR2>& a,
                const std::shared_ptr<VertexR2>& b,
                const std::shared_ptr<VertexR2>& c)
 {
@@ -85,9 +91,3 @@ bool is_convex(const std::shared_ptr<VertexR2>& a,
     // cross > 0 => convex
     return cross > 0.0;
 }
-
-using VertexR2 = Vertex<double, 2>;
-using VertexR3 = Vertex<double, 3>; 
-
-using PolygonR2 = Polygon<double, 2>;
-using PolygonR3 = Polygon<double, 3>;
